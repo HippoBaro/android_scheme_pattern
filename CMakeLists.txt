@@ -3,7 +3,7 @@ project(cellphone_password)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(LIB_HEADERS lib/include/password_node.hpp lib/include/password_space.hpp lib/include/constexpr_utils/utils.hpp)
+set(LIB_HEADERS include/password_node.hpp include/password_space.hpp include/constexpr_utils/utils.hpp)
 
 add_executable(cellphone_password main.cpp ${LIB_HEADERS})
 
@@ -13,7 +13,7 @@ target_compile_options(cellphone_password PUBLIC
         -fconstexpr-backtrace-limit=0
         -O3 -Werror -Wall -Wextra)
 
-target_include_directories(cellphone_password PUBLIC lib/include)
+target_include_directories(cellphone_password PUBLIC include)
 
 option(PRINT_RESULTS "Display results on stdout" ON)
 option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
