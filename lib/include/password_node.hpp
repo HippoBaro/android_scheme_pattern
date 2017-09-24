@@ -11,7 +11,7 @@
 
 namespace hippobaro::password_cellphone {
 
-    template<uint64_t Collumns, uint64_t Rows>
+    template<int Collumns, int Rows>
     class password_node {
 
     public:
@@ -36,7 +36,7 @@ namespace hippobaro::password_cellphone {
         OPTIONAL_CONSTEXPR auto in_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path, password_node<Collumns, Rows> *const target) {
             for (int j = 0; j < Collumns * Rows; ++j) {
                 if (path[j] == target)
-                    return hippobaro::lengh(path) - j;
+                    return hippobaro::length(path) - j;
             }
             return -1;
         }
@@ -77,7 +77,7 @@ namespace hippobaro::password_cellphone {
 
                 }
             }
-            if (hippobaro::lengh(ret) > 1)
+            if (hippobaro::length(ret) > 1)
                 return ret;
             return ret;
         }
@@ -88,7 +88,7 @@ namespace hippobaro::password_cellphone {
 
             auto interPoints = get_inter_points(&(*nodes)[target]);
 
-            if (hippobaro::lengh(interPoints) > 0) {
+            if (hippobaro::length(interPoints) > 0) {
                 for (auto &&between : interPoints) {
                     if (in_path(path, between) == -1)
                         return false;
@@ -123,7 +123,7 @@ namespace hippobaro::password_cellphone {
             add_to_path(path);
             uint64_t paths = 1;
             int i = 0;
-            while ((i = can_jump(path)) > -1) {
+            while ((hippobaro::length(path) < Collumns * Rows) && (i = can_jump(path)) > -1) {
                 visited[i] = true;
                 paths += (*nodes)[i].traverse(path);
                 clean_path(path);
@@ -139,7 +139,7 @@ namespace hippobaro::password_cellphone {
             std::cout << std::endl;
 #endif
 
-            if (hippobaro::lengh(path) < 4) {
+            if (hippobaro::length(path) < 4) {
                 paths--;
             }
             return paths;

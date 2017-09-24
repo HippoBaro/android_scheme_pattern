@@ -23,22 +23,22 @@ namespace hippobaro {
 
     template<typename T, size_t len>
     inline constexpr auto fill(std::array<T, len> & array, T value) {
-        for (int i = 0; i < len; ++i) {
+        for (size_t i = 0; i < len; ++i) {
             array[i] = value;
         }
     }
 
     template<typename T, size_t len>
     inline constexpr auto fill(std::array<T, len> & array, std::nullptr_t) {
-        for (int i = 0; i < len; ++i) {
+        for (size_t i = 0; i < len; ++i) {
             array[i] = nullptr;
         }
     }
 
     template<typename T, size_t len>
-    inline constexpr auto lengh(std::array<T *, len> & array) {
+    inline constexpr auto length(std::array<T *, len> & array) {
         int i = 0;
-        for (; i < 9; ++i) {
+        for (; i < len; ++i) {
             if (array[i] == nullptr)
                 break;
         }

@@ -9,7 +9,7 @@
 #include "password_node.hpp"
 
 namespace hippobaro::password_cellphone {
-    template<uint64_t Collumns, uint64_t Rows>
+    template<int Collumns, int Rows>
     class password_space {
     private:
         std::array<password_node<Collumns, Rows>, Collumns * Rows> _nodes;
