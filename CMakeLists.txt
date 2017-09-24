@@ -15,15 +15,15 @@ target_compile_options(cellphone_password PUBLIC
 
 target_include_directories(cellphone_password PUBLIC lib/include)
 
-option(DisplayResult "Display results on stdout" ON)
-option(CompileTimeEvaluation "Computes the results at compile-time" OFF)
+option(PRINT_RESULTS "Display results on stdout" ON)
+option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
 
 set(DEFINITIONS "")
 
-if (CompileTimeEvaluation)
+if (COMP_TIME_EVAL)
     set(DEFINITIONS ${DEFINITIONS} -DCOMPILE_TIME_EVAL=1)
 endif()
-if (DisplayResult)
+if (PRINT_RESULTS)
     set(DEFINITIONS ${DEFINITIONS} -DPRINT_RESULT=1)
 endif()
 target_compile_definitions(cellphone_password PUBLIC ${DEFINITIONS})
