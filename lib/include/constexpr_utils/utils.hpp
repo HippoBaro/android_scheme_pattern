@@ -5,7 +5,7 @@
 #ifndef CELLPHONE_PASSWORD_UTILS_HPP
 #define CELLPHONE_PASSWORD_UTILS_HPP
 
-#ifdef NDEBUG
+#ifdef COMPILE_TIME_EVAL
 #define OPTIONAL_CONSTEXPR constexpr
 #else
 #define OPTIONAL_CONSTEXPR
@@ -37,7 +37,7 @@ namespace hippobaro {
 
     template<typename T, size_t len>
     inline constexpr auto length(std::array<T *, len> & array) {
-        int i = 0;
+        size_t i = 0;
         for (; i < len; ++i) {
             if (array[i] == nullptr)
                 break;

@@ -33,10 +33,10 @@ namespace hippobaro::password_cellphone {
             }
         }
 
-        OPTIONAL_CONSTEXPR auto in_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path, password_node<Collumns, Rows> *const target) {
+        OPTIONAL_CONSTEXPR auto in_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path, password_node<Collumns, Rows> *const target) -> int {
             for (int j = 0; j < Collumns * Rows; ++j) {
                 if (path[j] == target)
-                    return hippobaro::length(path) - j;
+                    return (int)hippobaro::length(path) - j;
             }
             return -1;
         }
@@ -129,7 +129,8 @@ namespace hippobaro::password_cellphone {
                 clean_path(path);
             }
 
-#ifndef NDEBUG
+#ifdef PRINT_RESULT
+#ifndef COMPILE_TIME_EVAL
             for (int j = 0; j < Collumns * Rows; ++j) {
                 if (path[j])
                     std::cout << "[" << path[j]->coordinates.first << "," << path[j]->coordinates.second << "](" << path[j]->index << ")";
@@ -137,6 +138,7 @@ namespace hippobaro::password_cellphone {
                     std::cout <<  " --> ";
             }
             std::cout << std::endl;
+#endif
 #endif
 
             if (hippobaro::length(path) < 4) {
