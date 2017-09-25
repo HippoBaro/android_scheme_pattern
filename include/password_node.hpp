@@ -7,42 +7,29 @@
 
 #include <cstdint>
 #include <array>
+#include<iostream>
 #include <constexpr_utils/utils.hpp>
+#include <constexpr_utils/stack.hpp>
 
 namespace hippobaro::password_cellphone {
 
-    template<int Collumns, int Rows>
+    template<int Columns, int Rows>
     class password_node {
 
     public:
-        std::array<password_node<Collumns, Rows>, Collumns * Rows> * nodes;
-        std::array<bool, Collumns * Rows> visited;
+        using stack = hippobaro::stack<password_node<Columns, Rows>, Columns * Rows>;
+
+        std::array<password_node<Columns, Rows>, Columns * Rows> * nodes;
+        std::array<bool, Columns * Rows> visited;
         std::pair<int, int> coordinates;
         int index;
 
     public:
 
-        OPTIONAL_CONSTEXPR password_node() : nodes(nullptr), visited(), coordinates(), index(-1) {}
+        constexpr password_node() : nodes(nullptr), visited(), coordinates(), index(-1) {}
 
-        OPTIONAL_CONSTEXPR void add_to_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path) {
-            for (auto && node : path) {
-                if (node == nullptr) {
-                    node = this;
-                    return;
-                }
-            }
-        }
-
-        OPTIONAL_CONSTEXPR auto in_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path, password_node<Collumns, Rows> *const target) -> int {
-            for (int j = 0; j < Collumns * Rows; ++j) {
-                if (path[j] == target)
-                    return (int)hippobaro::length(path) - j;
-            }
-            return -1;
-        }
-
-        OPTIONAL_CONSTEXPR auto get_inter_points(password_node<Collumns, Rows> *const target) -> std::array<password_node<Collumns, Rows> *, Collumns>{
-            std::array<password_node<Collumns, Rows> *, Collumns> ret = {};
+        constexpr auto get_inter_points(password_node<Columns, Rows> *const target) const -> std::array<password_node<Columns, Rows> *, Columns>{
+            std::array<password_node<Columns, Rows> *, Columns> ret = {};
             hippobaro::fill(ret, nullptr);
 
             auto between = 0;
@@ -82,7 +69,7 @@ namespace hippobaro::password_cellphone {
             return ret;
         }
 
-        OPTIONAL_CONSTEXPR auto can_jump_to(std::array<password_node<Collumns, Rows> *, Collumns * Rows> &path, int target) {
+        constexpr auto can_jump_to(stack &path, int target) const {
             if (this == &(*nodes)[target])
                 return false;
 
@@ -90,15 +77,15 @@ namespace hippobaro::password_cellphone {
 
             if (hippobaro::length(interPoints) > 0) {
                 for (auto &&between : interPoints) {
-                    if (in_path(path, between) == -1)
+                    if (path.exist(between) == -1)
                         return false;
                 }
             }
-            return in_path(path, &(*nodes)[target]) == -1 && !visited[target];
+            return path.exist(&(*nodes)[target]) == -1 && !visited[target];
         }
 
-        OPTIONAL_CONSTEXPR auto can_jump(std::array<password_node<Collumns, Rows> *, Collumns * Rows> &path) {
-            for (int i = 0; i < Collumns * Rows; ++i) {
+        constexpr auto can_jump(stack &path) const {
+            for (int i = 0; i < Columns * Rows; ++i) {
                 if (can_jump_to(path, i))
                     return i;
             }
@@ -106,61 +93,48 @@ namespace hippobaro::password_cellphone {
             return -1;
         }
 
-        OPTIONAL_CONSTEXPR auto clean_path(std::array<password_node<Collumns, Rows> *, Collumns * Rows> &path) {
-            int i = 0;
-            for (; i < Collumns * Rows; ++i) {
-                if (path[i] == this)
-                    break;
+        constexpr auto clean_path(stack &path) {
+            password_node<Columns, Rows> * ptr = nullptr;
+            while ((ptr = path.pop()) != this)
+            {
+                if (ptr)
+                    hippobaro::fill(ptr->visited, false);
             }
-            for (++i; i < Collumns * Rows; ++i) {
-                if (path[i])
-                    hippobaro::fill(path[i]->visited, false);
-                path[i] = nullptr;
-            }
+            path.push(ptr);
         }
 
-        OPTIONAL_CONSTEXPR auto traverse(std::array<password_node<Collumns, Rows> *, Collumns * Rows> & path) -> uint64_t {
-            add_to_path(path);
-            uint64_t paths = 1;
-            int i = 0;
-            while ((hippobaro::length(path) < Collumns * Rows) && (i = can_jump(path)) > -1) {
-                visited[i] = true;
-                paths += (*nodes)[i].traverse(path);
-                clean_path(path);
-            }
-
+        OPTIONAL_CONSTEXPR auto print_path(stack & path) {
+            (void)path;
 #ifdef PRINT_RESULT
 #ifndef COMPILE_TIME_EVAL
-            for (int j = 0; j < Collumns * Rows; ++j) {
+            for (int j = 0; j < Columns * Rows; ++j) {
                 if (path[j])
                     std::cout << "[" << path[j]->coordinates.first << "," << path[j]->coordinates.second << "](" << path[j]->index << ")";
-                if (j + 1 < Collumns * Rows && path[j + 1])
+                if (j + 1 < Columns * Rows && path[j + 1])
                     std::cout <<  " --> ";
             }
             std::cout << std::endl;
 #endif
 #endif
+        }
 
-            if (hippobaro::length(path) < 4) {
+        constexpr auto traverse(stack & path) -> uint64_t {
+            uint64_t paths = 1;
+            int i = 0;
+
+            path.push(this);
+            while ((path.length() < Columns * Rows) && (i = can_jump(path)) > -1) {
+                visited[i] = true;
+                paths += (*nodes)[i].traverse(path);
+                clean_path(path);
+            }
+
+            print_path(path);
+            if (path.length() < 4) {
                 paths--;
             }
             return paths;
         }
-/*
-        0,0   1,0   2,0
-
-        0,1   1,1   2,1
-
-        0,2   1,2   2,2
-*/
-
-/*
-        1   4   7
-
-        2   5   8
-
-        3   6   9
-*/
 
     };
 }

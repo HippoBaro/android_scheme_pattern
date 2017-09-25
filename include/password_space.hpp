@@ -15,7 +15,7 @@ namespace hippobaro::password_cellphone {
         std::array<password_node<Collumns, Rows>, Collumns * Rows> _nodes;
 
     public:
-        OPTIONAL_CONSTEXPR password_space() : _nodes() {
+        constexpr password_space() : _nodes() {
 
             auto abs = 0;
             for (int c = 0; c < Collumns; ++c) {
@@ -31,13 +31,13 @@ namespace hippobaro::password_cellphone {
             }
         }
 
-        OPTIONAL_CONSTEXPR auto resolve() {
-            std::array<password_node<Collumns, Rows> *, Collumns * Rows> path = {};
+        constexpr auto resolve() {
+            hippobaro::stack<password_node<Collumns, Rows>, Collumns * Rows> path;
             auto ret = 0;
             for (auto &&node : _nodes) {
-                hippobaro::fill(path, nullptr);
                 ret += node.traverse(path);
                 hippobaro::fill(node.visited, false);
+                path.reset();
             }
             return ret;
         }

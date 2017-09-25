@@ -13,7 +13,7 @@ Android provides a 3*3 matrix by default.
 
 ## Implementation
 
-The implementation consist of a directed graph traversed by a recursive algorithms that heuristically construct all possible schemes.
+The implementation consist of a directed graph traversed by a recursive algorithms that heuristically constructs all possible schemes.
 
 ### Compiler support
 
@@ -46,5 +46,4 @@ main:
   xor eax, eax
   add rsp, 8
   ret
-
 ```

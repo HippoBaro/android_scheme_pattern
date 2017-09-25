@@ -3,7 +3,7 @@ project(cellphone_password)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(LIB_HEADERS include/password_node.hpp include/password_space.hpp include/constexpr_utils/utils.hpp)
+set(LIB_HEADERS include/password_node.hpp include/password_space.hpp include/constexpr_utils/utils.hpp include/constexpr_utils/stack.hpp)
 
 add_executable(cellphone_password main.cpp ${LIB_HEADERS})
 
