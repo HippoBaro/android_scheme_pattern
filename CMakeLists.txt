@@ -8,14 +8,14 @@ set(LIB_HEADERS include/password_node.hpp include/password_space.hpp include/con
 add_executable(cellphone_password main.cpp ${LIB_HEADERS})
 
 target_compile_options(cellphone_password PUBLIC
-        -fconstexpr-steps=2147483647
-        -fconstexpr-depth=100
-        -fconstexpr-backtrace-limit=0
-        )#-O3 -Werror -Wall -Wextra)
+        #-fconstexpr-steps=2147483647
+        #-fconstexpr-depth=100
+        #-fconstexpr-backtrace-limit=0
+        -O3 -Werror -Wall -Wextra)
 
 target_include_directories(cellphone_password PUBLIC include)
 
-option(PRINT_RESULTS "Display results on stdout" ON)
+option(PRINT_RESULTS "Display all results on stdout" OFF)
 option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
 
 set(DEFINITIONS "")

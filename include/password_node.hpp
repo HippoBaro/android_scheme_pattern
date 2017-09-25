@@ -23,7 +23,7 @@ namespace hippobaro::password_cellphone {
             password_node<Columns, Rows> * node;
             std::array<bool, Columns * Rows> visited;
 
-            constexpr explicit toto(password_node<Columns, Rows> *const node) : node(node) {
+            constexpr explicit toto(password_node<Columns, Rows> *const node) : node(node), visited() {
                 hippobaro::fill(visited, false);
             }
         };
@@ -31,7 +31,6 @@ namespace hippobaro::password_cellphone {
         using stack = hippobaro::stack<toto, Columns * Rows>;
 
         std::array<password_node<Columns, Rows>, Columns * Rows> * nodes;
-        //std::array<bool, Columns * Rows> visited;
         std::pair<int, int> coordinates;
         int index;
 
@@ -88,6 +87,8 @@ namespace hippobaro::password_cellphone {
 
             if (hippobaro::length(interPoints) > 0) {
                 for (auto &&between : interPoints) {
+                    if (!between)
+                        continue;
                     if (path.any_of([&] (auto *const node_path) { return node_path->node == between; }) == -1)
                         return false;
                 }
@@ -104,7 +105,7 @@ namespace hippobaro::password_cellphone {
             return -1;
         }
 
-        OPTIONAL_CONSTEXPR auto print_path(stack & path) {
+        OPTIONAL_CONSTEXPR auto print_path(stack const& path) const {
             (void)path;
 #ifdef PRINT_RESULT
 #ifndef COMPILE_TIME_EVAL

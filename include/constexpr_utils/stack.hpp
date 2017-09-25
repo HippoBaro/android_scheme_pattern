@@ -16,7 +16,7 @@ namespace hippobaro {
 
     public:
 
-        constexpr stack() {
+        constexpr stack() : _array() {
             hippobaro::fill(_array, nullptr);
         }
 
@@ -41,7 +41,7 @@ namespace hippobaro {
             return ret;
         }
 
-        constexpr inline auto length() {
+        constexpr inline auto length() const {
             return hippobaro::length(_array);
         }
 
@@ -49,17 +49,17 @@ namespace hippobaro {
             hippobaro::fill(_array, nullptr);
         }
 
-        constexpr auto contains(T *const target) -> int {
-            for (int j = 0; j < length(); ++j) {
+        constexpr auto contains(T *const target) const -> int {
+            for (int j = 0; j < Size; ++j) {
                 if (_array[j] == target)
                     return (int)length() - j;
             }
             return -1;
         }
 
-        constexpr auto any_of(std::function<bool(T *const)> predicate) -> int {
-            for (size_t j = 0; j < length(); ++j) {
-                if (predicate(_array[j]))
+        constexpr auto any_of(std::function<bool(T *const)> predicate) const -> int {
+            for (size_t j = 0; j < Size; ++j) {
+                if (_array[j] && predicate(_array[j]))
                     return (int)(length() - j);
             }
             return -1;

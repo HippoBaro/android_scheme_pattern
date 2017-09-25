@@ -5,6 +5,6 @@ int main() {
 
     OPTIONAL_CONSTEXPR auto possibilities = password_space<3, 3>().resolve();
 
-    printf("Result : %d\n", possibilities);
+    printf("Result : %llu\n", possibilities);
     return EXIT_SUCCESS;
 }

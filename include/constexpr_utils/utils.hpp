@@ -36,7 +36,7 @@ namespace hippobaro {
     }
 
     template<typename T, size_t len>
-    inline constexpr auto length(std::array<T *, len> & array) {
+    inline constexpr auto length(std::array<T *, len> const& array) {
         size_t i = 0;
         for (; i < len; ++i) {
             if (array[i] == nullptr)
