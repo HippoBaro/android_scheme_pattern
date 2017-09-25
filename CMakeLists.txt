@@ -11,7 +11,7 @@ target_compile_options(cellphone_password PUBLIC
         -fconstexpr-steps=2147483647
         -fconstexpr-depth=100
         -fconstexpr-backtrace-limit=0
-        -O3 -Werror -Wall -Wextra)
+        )#-O3 -Werror -Wall -Wextra)
 
 target_include_directories(cellphone_password PUBLIC include)
 

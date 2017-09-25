@@ -24,7 +24,7 @@ namespace hippobaro::password_cellphone {
                     _nodes[abs].coordinates.first = r;
                     _nodes[abs].coordinates.second = c;
                     _nodes[abs].nodes = &_nodes;
-                    _nodes[abs].index = abs+1;
+                    _nodes[abs].index = abs;
 
                     ++abs;
                 }
@@ -32,12 +32,10 @@ namespace hippobaro::password_cellphone {
         }
 
         constexpr auto resolve() {
-            hippobaro::stack<password_node<Collumns, Rows>, Collumns * Rows> path;
             auto ret = 0;
             for (auto &&node : _nodes) {
+                hippobaro::stack<typename password_node<Collumns, Rows>::toto, Collumns * Rows> path;
                 ret += node.traverse(path);
-                hippobaro::fill(node.visited, false);
-                path.reset();
             }
             return ret;
         }

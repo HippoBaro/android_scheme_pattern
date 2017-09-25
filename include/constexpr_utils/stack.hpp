@@ -29,10 +29,14 @@ namespace hippobaro {
             }
         }
 
-        constexpr auto pop() -> T * const {
+        constexpr auto peek() -> T * const {
             if (length() == 0)
                 return nullptr;
-            auto ret = _array[length() - 1];
+            return  _array[length() - 1];
+        }
+
+        constexpr auto pop() -> T * const {
+            auto ret = peek();
             _array[length() - 1] = nullptr;
             return ret;
         }
@@ -45,10 +49,18 @@ namespace hippobaro {
             hippobaro::fill(_array, nullptr);
         }
 
-        constexpr auto exist(T * const target) -> int {
-            for (int j = 0; j < Size; ++j) {
+        constexpr auto contains(T *const target) -> int {
+            for (int j = 0; j < length(); ++j) {
                 if (_array[j] == target)
                     return (int)length() - j;
+            }
+            return -1;
+        }
+
+        constexpr auto any_of(std::function<bool(T *const)> predicate) -> int {
+            for (size_t j = 0; j < length(); ++j) {
+                if (predicate(_array[j]))
+                    return (int)(length() - j);
             }
             return -1;
         }
