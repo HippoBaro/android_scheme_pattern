@@ -7,7 +7,6 @@
 
 #include <cstdint>
 #include <array>
-#include<iostream>
 #include <constexpr_utils/utils.hpp>
 #include <constexpr_utils/stack.hpp>
 
@@ -19,10 +18,10 @@ namespace hippobaro::password_cellphone {
     public:
 
         struct path_node {
-            password_node<Columns, Rows> * node;
+            password_node<Columns, Rows> const * node;
             std::array<bool, Columns * Rows> visited;
 
-            constexpr explicit path_node(password_node<Columns, Rows> *const node) : node(node), visited() {
+            constexpr explicit path_node(password_node<Columns, Rows> const *const node) : node(node), visited() {
                 hippobaro::fill(visited, false);
             }
 
@@ -44,6 +43,7 @@ namespace hippobaro::password_cellphone {
 
         constexpr password_node() : nodes(nullptr), coordinates() {}
 
+        // This functions gets all nodes that lie in a straight line between two other nodes.
         constexpr auto get_inter_points(password_node<Columns, Rows> *const target) const -> std::array<password_node<Columns, Rows> *, Columns>{
             std::array<password_node<Columns, Rows> *, Columns> ret = {};
             hippobaro::fill(ret, nullptr);
@@ -86,22 +86,35 @@ namespace hippobaro::password_cellphone {
         }
 
         constexpr auto can_jump_to(node_stack &path, int target) const {
+
+            // If the tested node is this node, then we know we can't jump to it.
             if (this == &(*nodes)[target])
                 return false;
 
+            // First, we get all points that may lie between this node and the destination.
+            // In a 3*3 matrix, only one node may exist between two points, but in larger matrices multiples ones
+            // could.
             auto interPoints = get_inter_points(&(*nodes)[target]);
 
+            // If there is indeed one or more points that separates us from the destination we need to check if they
+            // satisfy the requirement to allow a jump.
             if (hippobaro::length(interPoints) > 0) {
                 for (auto &&between : interPoints) {
                     if (!between)
                         continue;
+
+                    // Here we test if those points have been previously visited in the current path.
+                    // If one of them has not been, then we can't jump.
                     path_node tmp(between);
-                    if (path.contains(&tmp) == -1)
+                    if (!path.contains(&tmp))
                         return false;
                 }
             }
+
+            // Finally, we check if the destination node has been visited in the current stack
+            // AND if this node has previously visited it.
             path_node tmp(&(*nodes)[target]);
-            return path.contains(&tmp) == -1 && !path.peek()->visited[target];
+            return !path.contains(&tmp) && !path.peek()->visited[target];
         }
 
         constexpr auto can_jump(node_stack &path) const {
@@ -112,19 +125,28 @@ namespace hippobaro::password_cellphone {
             return -1;
         }
 
-        constexpr auto traverse(node_stack & path) -> std::array<uint64_t, Columns * Rows> {
+        constexpr auto traverse(node_stack & path) const -> std::array<uint64_t, Columns * Rows> {
             std::array<uint64_t, Columns * Rows> pathslen = {};
             int i = 0;
 
+            // First, we add this node inside the stack
             path_node path_node(this);
             path.push(&path_node);
+
+            // Then, we jump to every possible cells around.
             while ((path.length() < Columns * Rows) && (i = can_jump(path)) > -1) {
+                // We mark the destination node as VISITED so that we don't jump multiple time to it.
                 path.peek()->visited[i] = true;
+                // And we jump
                 pathslen += (*nodes)[i].traverse(path);
             }
+            // When we can't jump anymore, we have successfully discovered on new path.
+            // So we add it to the result array.
             pathslen[path.length()-1]++;
 
+            // We pop this node from the stack.
             while (path.pop()->node != this);
+
             return pathslen;
         }
 

@@ -45,26 +45,14 @@ namespace hippobaro {
             return hippobaro::length(_array);
         }
 
-        constexpr inline auto reset() {
-            hippobaro::fill(_array, nullptr);
-        }
-
-        constexpr auto contains(T *const target) const -> int {
+        constexpr auto contains(T *const target) const {
             for (int j = 0; j < Size; ++j) {
                 if (!_array[j])
                     continue;
                 if (*(_array[j]) == *target)
-                    return (int)length() - j;
+                    return true;
             }
-            return -1;
-        }
-
-        constexpr auto any_of(std::function<bool(T *const)> predicate) const -> int {
-            for (size_t j = 0; j < Size; ++j) {
-                if (_array[j] && predicate(_array[j]))
-                    return (int)(length() - j);
-            }
-            return -1;
+            return false;
         }
 
         constexpr T * const & operator[](size_t n) const {return _array[n];}
