@@ -35,6 +35,20 @@ namespace hippobaro {
         }
     }
 
+    template<typename T, unsigned long len>
+    constexpr std::array<T, len>& operator+=(std::array<T, len>& thi, const std::array<T, len>& oth) {
+        for (size_t i = 0; i < len; ++i)
+            thi.at(i) += oth.at(i);
+        return thi;
+    }
+
+    template<typename T, unsigned long len>
+    constexpr std::array<T, len> operator+(const std::array<T, len>& a, const std::array<T, len>& b) {
+        std::array<T, len> sum = a;
+        sum += b;
+        return sum;
+    }
+
     template<typename T, size_t len>
     inline constexpr auto length(std::array<T *, len> const& array) {
         size_t i = 0;

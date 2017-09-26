@@ -34,27 +34,27 @@ namespace hippobaro::password_cellphone {
             }
         }
 
-        OPTIONAL_CONSTEXPR auto resolve() -> uint64_t {
+        OPTIONAL_CONSTEXPR auto resolve() -> std::array<uint64_t, Columns * Rows> {
 #ifdef COMPILE_TIME_EVAL
-            auto ret = 0;
+            std::array<uint64_t, Columns * Rows> pathslen = {};
             for (auto &&node : _nodes) {
-                hippobaro::stack<typename password_node<Columns, Rows>::toto, Columns * Rows> path;
-                ret += node.traverse(path);
+                hippobaro::stack<typename password_node<Columns, Rows>::path_node, Columns * Rows> path;
+                pathslen += node.traverse(path);
             }
 #else
-            std::atomic<uint64_t> ret = 0;
+            std::array<uint64_t, Columns * Rows> pathslen = {};
             std::vector<std::unique_ptr<std::thread>> threads;
             for (auto &&node : _nodes) {
-                threads.emplace_back(std::make_unique<std::thread>([&node, &ret] {
-                    hippobaro::stack<typename password_node<Columns, Rows>::toto, Columns * Rows> path;
-                    ret += node.traverse(path);
+                threads.emplace_back(std::make_unique<std::thread>([&node, &pathslen] {
+                    hippobaro::stack<typename password_node<Columns, Rows>::path_node, Columns * Rows> path;
+                    pathslen += node.traverse(path);
                 }));
             }
             for(auto &&thread : threads) {
                 thread->join();
             };
 #endif
-            return ret;
+            return pathslen;
         }
     };
 }

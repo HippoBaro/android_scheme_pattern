@@ -16,7 +16,6 @@ endif()
 target_compile_options(cellphone_password PUBLIC ${OPTS})
 target_include_directories(cellphone_password PUBLIC include)
 
-option(PRINT_RESULTS "Display all results on stdout" OFF)
 option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
 
 set(DEFINITIONS "")

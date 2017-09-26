@@ -18,33 +18,31 @@ namespace hippobaro::password_cellphone {
 
     public:
 
-        struct toto {
-
+        struct path_node {
             password_node<Columns, Rows> * node;
             std::array<bool, Columns * Rows> visited;
 
-            constexpr explicit toto(password_node<Columns, Rows> *const node) : node(node), visited() {
+            constexpr explicit path_node(password_node<Columns, Rows> *const node) : node(node), visited() {
                 hippobaro::fill(visited, false);
             }
 
-            constexpr bool operator==(const toto &rhs) const {
+            constexpr bool operator==(const path_node &rhs) const {
                 return node == rhs.node;
             }
 
-            constexpr bool operator!=(const toto &rhs) const {
+            constexpr bool operator!=(const path_node &rhs) const {
                 return !(rhs == *this);
             }
         };
 
-        using stack = hippobaro::stack<toto, Columns * Rows>;
+        using node_stack = hippobaro::stack<path_node, Columns * Rows>;
 
         std::array<password_node<Columns, Rows>, Columns * Rows> * nodes;
         std::pair<int, int> coordinates;
-        int index;
 
     public:
 
-        constexpr password_node() : nodes(nullptr), coordinates(), index(-1) {}
+        constexpr password_node() : nodes(nullptr), coordinates() {}
 
         constexpr auto get_inter_points(password_node<Columns, Rows> *const target) const -> std::array<password_node<Columns, Rows> *, Columns>{
             std::array<password_node<Columns, Rows> *, Columns> ret = {};
@@ -87,7 +85,7 @@ namespace hippobaro::password_cellphone {
             return ret;
         }
 
-        constexpr auto can_jump_to(stack &path, int target) const {
+        constexpr auto can_jump_to(node_stack &path, int target) const {
             if (this == &(*nodes)[target])
                 return false;
 
@@ -97,57 +95,37 @@ namespace hippobaro::password_cellphone {
                 for (auto &&between : interPoints) {
                     if (!between)
                         continue;
-                    toto tmp(between);
+                    path_node tmp(between);
                     if (path.contains(&tmp) == -1)
                         return false;
                 }
             }
-            toto tmp(&(*nodes)[target]);
+            path_node tmp(&(*nodes)[target]);
             return path.contains(&tmp) == -1 && !path.peek()->visited[target];
         }
 
-        constexpr auto can_jump(stack &path) const {
+        constexpr auto can_jump(node_stack &path) const {
             for (int i = 0; i < Columns * Rows; ++i) {
                 if (can_jump_to(path, i))
                     return i;
             }
-
             return -1;
         }
 
-        OPTIONAL_CONSTEXPR auto print_path(stack const& path) const {
-            (void)path;
-#ifdef PRINT_RESULT
-#ifndef COMPILE_TIME_EVAL
-            for (int j = 0; j < Columns * Rows; ++j) {
-                if (path[j])
-                    std::cout << "[" << path[j]->node->coordinates.first << "," << path[j]->node->coordinates.second << "](" << path[j]->node->index << ")";
-                if (j + 1 < Columns * Rows && path[j + 1])
-                    std::cout <<  " --> ";
-            }
-            std::cout << std::endl;
-#endif
-#endif
-        }
-
-        constexpr auto traverse(stack & path) -> uint64_t {
-            uint64_t paths = 1;
+        constexpr auto traverse(node_stack & path) -> std::array<uint64_t, Columns * Rows> {
+            std::array<uint64_t, Columns * Rows> pathslen = {};
             int i = 0;
 
-            toto path_node(this);
+            path_node path_node(this);
             path.push(&path_node);
             while ((path.length() < Columns * Rows) && (i = can_jump(path)) > -1) {
                 path.peek()->visited[i] = true;
-                paths += (*nodes)[i].traverse(path);
+                pathslen += (*nodes)[i].traverse(path);
             }
-
-            print_path(path);
-            if (path.length() < 4) {
-                paths--;
-            }
+            pathslen[path.length()-1]++;
 
             while (path.pop()->node != this);
-            return paths;
+            return pathslen;
         }
 
     };
