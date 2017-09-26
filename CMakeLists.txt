@@ -27,3 +27,6 @@ if (PRINT_RESULTS)
     set(DEFINITIONS ${DEFINITIONS} -DPRINT_RESULT=1)
 endif()
 target_compile_definitions(cellphone_password PUBLIC ${DEFINITIONS})
+
+find_package (Threads)
+target_link_libraries(cellphone_password PUBLIC ${CMAKE_THREAD_LIBS_INIT})
