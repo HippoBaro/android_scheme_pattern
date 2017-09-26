@@ -1,6 +1,6 @@
 # Android scheme pattern resolver
 
-**Combinatorics & Algorithms Design** assignment. The purpose of this assignment is to create an algorithm that compute all possible and legal Android scheme lock patterns.
+**Combinatorics & Algorithms Design** assignment. The purpose of this assignment is to create an algorithm that computes all possible and legal Android scheme lock patterns.
 
 ## Lock Schemes
 
@@ -13,7 +13,7 @@ Android provides a 3*3 matrix by default.
 
 ## Implementation
 
-The implementation consist of a directed graph traversed by a recursive algorithms that heuristically constructs all possible schemes.
+The implementation consists of a directed graph traversed by a recursive algorithm that heuristically constructs all possible schemes.
 
 ### Compiler support
 
@@ -31,7 +31,7 @@ The algorithm is not limited by a 3 * 3 matrix but is able to work with arbitrar
 ### Fully compile-time evaluated (`COMP_TIME_EVAL` CMake option)
 
 I took this opportunity to play with C++ **`constexpr`** keyword and compile-time evaluation. The algorithm is fully compliant with constexpr limits.
-As a result, for a specified matrix of 2 by 2, the produced assembly is as follow (compiled with `GCC 7.2`) :
+As a result, for a specified matrix of 2 by 2, the produced assembly is as follows (compiled with `GCC 7.2`) :
 
 ```asm
 .LC0:
@@ -57,5 +57,5 @@ The produced assembly directly incorporates the result of the computation (24 sc
 
 ### Multithreaded Pure functional
 
-The recursive algorithm implements only pure functions and thus is completely stateless.
-When compile-time evaluation in not enabled, the program takes advantage of this and shards the workload across multiple threads.
+The recursive algorithm implements only pure functions, and thus is completely stateless.
+When compile-time evaluation in not enabled, the program takes advantage of this and shard the workload across multiple threads.
