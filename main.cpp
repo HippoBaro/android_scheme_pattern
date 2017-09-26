@@ -10,11 +10,12 @@ auto print_result() {
     OPTIONAL_CONSTEXPR auto possibilities = password_space<Columns, Rows>().resolve();
 
     uint64_t tot = 0;
-    for (int i = 3; i < Columns * Rows; ++i) {
-        printf("%d nodes combinations: %" PRIu64 "\n", i+1, possibilities[i]);
-        tot += possibilities[i];
+    for (int i = 0; i < Columns * Rows; ++i) {
+        printf("%d nodes combinations: %" PRIu64 " schemes;\n", i+1, possibilities[i]);
+        if (i > 2) // We only count the schemes with more than 4 nodes connected for the total
+            tot += possibilities[i];
     }
-    printf("Total: %" PRIu64 "\n", tot);
+    printf("\nTotal >= 4 nodes: %" PRIu64 " schemes.\n", tot);
     return EXIT_SUCCESS;
 };
 
