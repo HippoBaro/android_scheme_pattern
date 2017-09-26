@@ -51,7 +51,9 @@ namespace hippobaro {
 
         constexpr auto contains(T *const target) const -> int {
             for (int j = 0; j < Size; ++j) {
-                if (_array[j] == target)
+                if (!_array[j])
+                    continue;
+                if (*(_array[j]) == *target)
                     return (int)length() - j;
             }
             return -1;

@@ -7,19 +7,19 @@ set(LIB_HEADERS include/password_node.hpp include/password_space.hpp include/con
 
 add_executable(cellphone_password main.cpp ${LIB_HEADERS})
 
-target_compile_options(cellphone_password PUBLIC
-        #-fconstexpr-steps=2147483647
-        #-fconstexpr-depth=100
-        #-fconstexpr-backtrace-limit=0
-        -O3 -Werror -Wall -Wextra)
+set(OPTS -O3 -Werror -Wall -Wextra)
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    set(OPTS ${OPTS} -fconstexpr-steps=2147483647)
+endif()
+
+target_compile_options(cellphone_password PUBLIC ${OPTS})
 target_include_directories(cellphone_password PUBLIC include)
 
 option(PRINT_RESULTS "Display all results on stdout" OFF)
 option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
 
 set(DEFINITIONS "")
-
 if (COMP_TIME_EVAL)
     set(DEFINITIONS ${DEFINITIONS} -DCOMPILE_TIME_EVAL=1)
 endif()

@@ -26,6 +26,14 @@ namespace hippobaro::password_cellphone {
             constexpr explicit toto(password_node<Columns, Rows> *const node) : node(node), visited() {
                 hippobaro::fill(visited, false);
             }
+
+            constexpr bool operator==(const toto &rhs) const {
+                return node == rhs.node;
+            }
+
+            constexpr bool operator!=(const toto &rhs) const {
+                return !(rhs == *this);
+            }
         };
 
         using stack = hippobaro::stack<toto, Columns * Rows>;
@@ -89,11 +97,13 @@ namespace hippobaro::password_cellphone {
                 for (auto &&between : interPoints) {
                     if (!between)
                         continue;
-                    if (path.any_of([&] (auto *const node_path) { return node_path->node == between; }) == -1)
+                    toto tmp(between);
+                    if (path.contains(&tmp) == -1)
                         return false;
                 }
             }
-            return path.any_of([&] (auto *const node_path) { return node_path->node == &(*nodes)[target]; }) == -1 && !path.peek()->visited[target];
+            toto tmp(&(*nodes)[target]);
+            return path.contains(&tmp) == -1 && !path.peek()->visited[target];
         }
 
         constexpr auto can_jump(stack &path) const {
