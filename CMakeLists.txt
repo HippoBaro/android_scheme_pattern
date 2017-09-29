@@ -17,7 +17,7 @@ target_compile_options(cellphone_password PUBLIC ${OPTS})
 target_include_directories(cellphone_password PUBLIC include)
 
 option(COMP_TIME_EVAL "Computes the results at compile-time" OFF)
-option(PRINT_SCHEMES "Computes the results at compile-time" OFF)
+option(PRINT_SCHEMES "Prints all found combinations on stdout" OFF)
 option(USE_SYMMETRY "Computes the results using symmetry (reduces computational cost)" ON)
 
 set(DEFINITIONS "")

@@ -23,6 +23,14 @@ $ make
 $ ./cellphone_cellphone_password
 ```
 
+### CMake options
+
+| Option           | Description                                                      | Default  |
+| ---------------- |:----------------------------------------------------------------:| --------:|
+| `COMP_TIME_EVAL` | Computes the results at compile-time using `constexpr`.          |   OFF    |
+| `PRINT_SCHEMES`  | Prints all found combinations on stdout.                         |   OFF    |
+| `USE_SYMMETRY`   | Computes the results using symmetry (reduces computational cost) |   ON     |
+
 ## Implementation
 
 The implementation consists of a directed graph traversed by a recursive algorithm that heuristically constructs all possible schemes.
