@@ -26,7 +26,7 @@ $ ./cellphone_cellphone_password
 ### CMake options
 
 | Option           | Description                                                      | Default  |
-| ---------------- |:----------------------------------------------------------------:| --------:|
+| ---------------- | ---------------------------------------------------------------- |:--------:|
 | `COMP_TIME_EVAL` | Computes the results at compile-time using `constexpr`.          |   OFF    |
 | `PRINT_SCHEMES`  | Prints all found combinations on stdout.                         |   OFF    |
 | `USE_SYMMETRY`   | Computes the results using symmetry (reduces computational cost) |   ON     |
