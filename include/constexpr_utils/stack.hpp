@@ -13,20 +13,16 @@ namespace hippobaro {
     class stack {
     private:
         std::array<T *, Size> _array;
+        size_t _index;
 
     public:
 
-        constexpr stack() : _array() {
+        constexpr stack() : _array(), _index(0) {
             hippobaro::fill(_array, nullptr);
         }
 
         constexpr void push(T * const value) {
-            for (auto && node : _array) {
-                if (node == nullptr) {
-                    node = value;
-                    return;
-                }
-            }
+           _array[_index++] = value;
         }
 
         constexpr auto peek() -> T * const {
@@ -37,16 +33,16 @@ namespace hippobaro {
 
         constexpr auto pop() -> T * const {
             auto ret = peek();
-            _array[length() - 1] = nullptr;
+            _array[--_index] = nullptr;
             return ret;
         }
 
         constexpr inline auto length() const {
-            return hippobaro::length(_array);
+            return _index;
         }
 
         constexpr auto contains(T *const target) const {
-            for (int j = 0; j < Size; ++j) {
+            for (size_t j = 0; j < length(); ++j) {
                 if (!_array[j])
                     continue;
                 if (*(_array[j]) == *target)

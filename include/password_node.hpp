@@ -9,8 +9,11 @@
 #include <array>
 #include <constexpr_utils/utils.hpp>
 #include <constexpr_utils/stack.hpp>
+#include <iostream>
 
 namespace hippobaro::password_cellphone {
+
+    std::mutex mutex;
 
     template<int Columns, int Rows>
     class password_node {
@@ -125,6 +128,17 @@ namespace hippobaro::password_cellphone {
             return -1;
         }
 
+        auto print_path(node_stack & path) const {
+            std::lock_guard<std::mutex> lock(mutex);
+            for (int j = 0; j < Columns * Rows; ++j) {
+                if (path[j])
+                    std::cout << "[" << path[j]->node->coordinates.first << "," << path[j]->node->coordinates.second << "]";
+                if (j + 1 < Columns * Rows && path[j + 1])
+                    std::cout <<  " --> ";
+            }
+            std::cout << std::endl;
+        }
+
         constexpr auto traverse(node_stack & path) const -> std::array<uint64_t, Columns * Rows> {
             std::array<uint64_t, Columns * Rows> pathslen = {};
             int i = 0;
@@ -143,6 +157,10 @@ namespace hippobaro::password_cellphone {
             // When we can't jump anymore, we have successfully discovered on new path.
             // So we add it to the result array.
             pathslen[path.length()-1]++;
+
+#ifdef PRINT_RESULT
+            print_path(path);
+#endif
 
             // We pop this node from the stack.
             while (path.pop()->node != this);

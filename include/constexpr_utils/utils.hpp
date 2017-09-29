@@ -5,17 +5,13 @@
 #ifndef CELLPHONE_PASSWORD_UTILS_HPP
 #define CELLPHONE_PASSWORD_UTILS_HPP
 
-#ifdef COMPILE_TIME_EVAL
-#define OPTIONAL_CONSTEXPR constexpr
-#else
-#define OPTIONAL_CONSTEXPR
-#endif
-
 #include <array>
 
 namespace hippobaro {
 
-    constexpr int abs(int value) {
+    //std::abs if not constexpr for some obscure reason
+    template<typename T>
+    constexpr int abs(T value) {
         if (value < 0)
             return value * -1;
         return value;
