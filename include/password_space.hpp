@@ -99,7 +99,6 @@ namespace hippobaro::password_cellphone {
                         std::lock_guard<std::mutex> lock(mutex);
                         pathslen += t;
                     }
-
                 }));
             }
             for(auto &&thread : threads) {

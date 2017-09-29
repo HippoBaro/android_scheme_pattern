@@ -4,7 +4,7 @@
 
 ## Lock Schemes
 
-A pattern is legal if:
+A pattern is legal iff:
 - Each pattern must connect at least four dots.
 - The dots in the pattern must all be distinct.
 - If the line segment connecting any two consecutive dots in the pattern passes through any other dots, the other dots must have previously been in the pattern.
@@ -18,7 +18,7 @@ This project uses `CMake 3.8` and newer
 ```bash
 $ git clone https://github.com/HippoBaro/android_scheme_pattern.git
 $ cd android_scheme_pattern && mkdir build && cd build
-$ cmake [-DCOMP_TIME_EVAL=ON] ..
+$ cmake ..
 $ make
 $ ./cellphone_cellphone_password
 ```
@@ -35,6 +35,10 @@ $ ./cellphone_cellphone_password
 
 The implementation consists of a directed graph traversed by a recursive algorithm that heuristically constructs all possible schemes.
 
+## Performances
+
+The code is tuned for performance, with the exclusive use of fixed-sized arrays (no dynamic allocation) and usage of templates
+
 ### Compiler support
 
 The code uses some of the newest C++17 features. It has been compiled successfully on:
@@ -49,7 +53,7 @@ If you don't have the required setup (use docker), here's a [Compiler Explorer l
 
 The algorithm is not limited by a 3 * 3 matrix but is able to work with arbitrary-sized matrices by using `password_space<Collumns, Rows>`.
 
-### Fully compile-time evaluated (`COMP_TIME_EVAL` CMake option)
+### Fully compile-time evaluated
 
 I took this opportunity to play with C++ **`constexpr`** keyword and compile-time evaluation. The algorithm is fully compliant with constexpr limits.
 As a result, for a specified matrix of 2 by 2, the produced assembly is as follows (compiled with `GCC 7.2`) :
@@ -80,3 +84,4 @@ The produced assembly directly incorporates the result of the computation (24 sc
 
 The recursive algorithm implements only pure functions, and thus is completely stateless.
 When compile-time evaluation in not enabled, the program takes advantage of this and shard the workload across multiple threads.
+
