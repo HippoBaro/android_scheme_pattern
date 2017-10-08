@@ -134,7 +134,7 @@ namespace hippobaro::password_cellphone {
                 if (path[j])
                     std::cout << "[" << path[j]->node->coordinates.first << "," << path[j]->node->coordinates.second << "]";
                 if (j + 1 < Columns * Rows && path[j + 1])
-                    std::cout <<  " --> ";
+                    std::cout <<  "--";
             }
             std::cout << std::endl;
         }
@@ -143,7 +143,7 @@ namespace hippobaro::password_cellphone {
             std::array<uint64_t, Columns * Rows> pathslen = {};
             int i = 0;
 
-            // First, we add this node inside the stack
+            // First, we push this node on the stack
             path_node path_node(this);
             path.push(&path_node);
 
@@ -162,7 +162,7 @@ namespace hippobaro::password_cellphone {
             print_path(path);
 #endif
 
-            // We pop this node from the stack.
+            // Finally, we pop this node from the stack.
             while (path.pop()->node != this);
 
             return pathslen;
