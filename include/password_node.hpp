@@ -148,7 +148,7 @@ namespace hippobaro::password_cellphone {
             path.push(&path_node);
 
             // Then, we jump to every possible cells around.
-            while ((path.length() < Columns * Rows) && (i = can_jump(path)) > -1) {
+            while ((i = can_jump(path)) > -1) {
                 // We mark the destination node as VISITED so that we don't jump multiple time to it.
                 path.peek()->visited[i] = true;
                 // And we jump
@@ -156,7 +156,7 @@ namespace hippobaro::password_cellphone {
             }
             // When we can't jump anymore, we have successfully discovered on new path.
             // So we add it to the result array.
-            pathslen[path.length()-1]++;
+            ++pathslen[path.length()-1];
 
 #ifdef PRINT_RESULT
             print_path(path);
